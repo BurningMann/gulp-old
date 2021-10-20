@@ -10,7 +10,7 @@ const sass = require("gulp-sass");
 const cssnano = require("gulp-cssnano");
 const concat = require('gulp-concat')
 const plumber = require("gulp-plumber");
-const panini = require("panini");
+const fileinclude = require('gulp-file-include');
 const imagemin = require("gulp-imagemin");
 const del = require("del");
 const notify = require("gulp-notify");
@@ -24,24 +24,27 @@ const distPath = 'dist/';
 const path = {
     build: {
         html:   distPath,
-        js:     distPath + "assets/js/",
-        css:    distPath + "assets/css/",
-        images: distPath + "assets/img/",
-        fonts:  distPath + "assets/fonts/"
+        js:     distPath + "js/",
+        css:    distPath + "css/",
+        images: distPath + "img/",
+        video:  distPath + "video/",
+        fonts:  distPath + "fonts/"
     },
     src: {
         html:   srcPath + "*.html",
         js:     srcPath + "assets/js/*.js",
         css:    srcPath + "assets/scss/*.scss",
-        adcss:    srcPath + "assets/css/*.css",
+        adcss:  srcPath + "assets/css/*.css",
         images: srcPath + "assets/img/**/*.{jpg,png,svg,gif,ico,webp,webmanifest,xml,json}",
+        video:  srcPath + "assets/video/**/*.{mp4,MP4,mov,webm}",
         fonts:  srcPath + "assets/fonts/**/*.{eot,woff,woff2,ttf,svg,css}"
     },
     watch: {
         html:   srcPath + "**/*.html",
         js:     srcPath + "assets/js/**/*.js",
         css:    srcPath + "assets/scss/**/*.scss",
-        images: srcPath + "assets/img/**/*.{jpg,png,svg,gif,ico,webp,webmanifest,xml,json}",
+        images: srcPath + "assets/img/**/*.{jpg,png,svg,gif,ico,webp,webmanifest,xml,json,mp4}",
+        video:  srcPath + "assets/video/**/*.{mp4,MP4,mov,webm}",
         fonts:  srcPath + "assets/fonts/**/*.{eot,woff,woff2,ttf,svg}"
     },
     clean: "./" + distPath
@@ -54,15 +57,11 @@ const path = {
 
 
 function html(cb) {
-    panini.refresh();
     return src(path.src.html, {base: srcPath})
         .pipe(plumber())
-        .pipe(panini({
-            root:       srcPath,
-            layouts:    srcPath + 'layouts/',
-            partials:   srcPath + 'partials/',
-            helpers:    srcPath + 'helpers/',
-            data:       srcPath + 'data/'
+        .pipe(fileinclude({
+            prefix: '@@',
+            basepath: srcPath
         }))
         .pipe(dest(path.build.html))
         .pipe(browserSync.reload({stream: true}));
@@ -159,7 +158,7 @@ function jsWatch(cb) {
 
 function images(cb) {
     return src(path.src.images)
-        .pipe(imagemin([
+        /* .pipe(imagemin([
             imagemin.gifsicle({interlaced: true}),
             imagemin.mozjpeg({quality: 95, progressive: true}),
             imagemin.optipng({optimizationLevel: 5}),
@@ -169,7 +168,7 @@ function images(cb) {
                     { cleanupIDs: false }
                 ]
             })
-        ]))
+        ])) */
         .pipe(dest(path.build.images))
         .pipe(browserSync.reload({stream: true}));
 
@@ -178,6 +177,14 @@ function images(cb) {
 function imagesWatch(cb) {
     return src(path.src.images)
         .pipe(dest(path.build.images))
+        .pipe(browserSync.reload({stream: true}));
+
+    cb();
+}
+
+function video(cb) {
+    return src(path.src.video)
+        .pipe(dest(path.build.video))
         .pipe(browserSync.reload({stream: true}));
 
     cb();
@@ -202,8 +209,10 @@ function watchFiles() {
     gulp.watch([path.watch.css], cssWatch);
     gulp.watch([path.watch.js], jsWatch);
     gulp.watch([path.watch.images], imagesWatch);
+    gulp.watch([path.watch.video], video);
     gulp.watch([path.watch.fonts], fonts);
 }
+
 function serve() {
     browserSync.init({
         server: {
@@ -211,7 +220,7 @@ function serve() {
         }
     });
 }
-const build = gulp.series(clean, html, additionalcss, css, js, images, fonts);
+const build = gulp.series(clean, html, additionalcss, css, js, images, video, fonts);
 const watch = gulp.parallel(watchFiles, serve);
 
 
@@ -222,6 +231,7 @@ exports.additionalcss = additionalcss;
 exports.css = css;
 exports.js = js;
 exports.images = images;
+exports.video = video;
 exports.fonts = fonts;
 exports.clean = clean;
 exports.build = build;
