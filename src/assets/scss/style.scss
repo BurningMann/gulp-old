@@ -1,21 +1,33 @@
 @import './helpers/optimize.scss';
 
-body{
-  margin: 0;
-  float: left;
-  width: 100%;
-  position: relative;
-  scroll-behavior: smooth;
-    text-rendering: optimizeSpeed;
-    -webkit-text-size-adjust: none;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale; 
-  &.hidden{
+* {
+  box-sizing: border-box;
+}
+
+body,html {
+  height: max-content;
+
+  &.noskroll {
     overflow: hidden;
   }
 }
 
-.container{
+body {
+  margin: 0;
+  width: 100%;
+  position: relative;
+  scroll-behavior: smooth;
+  text-rendering: optimizeSpeed;
+  -webkit-text-size-adjust: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; 
+}
+
+p {
+  margin: 0;
+}
+
+.container {
   width: 100%;
   max-width: 1980px;
   margin: 0 auto;
@@ -27,40 +39,34 @@ body{
   float: left;
 }
 
-p{
-  margin: 0;
+.fit-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
 
-img,video{
-  max-width: 100%;
-  &.fit{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-  }
-}
-
-.mobile_visible{
+.mobile_visible {
   display: none;
 }
 
 @media screen and (max-width:780px){
-  .mobile_hidden{
+  .mobile_hidden {
     display: none !important;
   }
-  .mobile_visible{
+
+  .mobile_visible {
     display: block;
   }
 }
 
-.slick-arrow{
+.slick-arrow {
   position: absolute;
   z-index: 5;
   cursor: pointer;
 }
 
-.slick-dots{
+.slick-dots {
   position: absolute;
   top: calc(100% + 40px);
   left: 0;
@@ -68,7 +74,7 @@ img,video{
   display: flex;
   justify-content: center;
   
-  li{
+  li {
     border: 1px solid #000000;
     border-radius: 50%;
     width: 10px;
@@ -79,12 +85,13 @@ img,video{
       background: #000;
     }
   }
-  button{
+
+  button {
     display: none;
   }
 }
 
-img[data-lazysrc]{
+img[data-lazysrc] {
   opacity: 0;
   visibility: hidden;
   backface-visibility: hidden;
@@ -97,16 +104,21 @@ img[data-lazysrc]{
   }
 }
 
-.red{
-  color: red;
+[data-popup] {
+  cursor: pointer;
 }
 
-[data-popup]{
-  cursor: pointer;
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
 }
 /* END common styles */
 
 @import './components/header.scss';
-
 @import './components/popup.scss';
 @import './components/footer.scss';

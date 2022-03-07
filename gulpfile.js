@@ -16,7 +16,6 @@ const del = require("del");
 const notify = require("gulp-notify");
 const browserSync = require("browser-sync").create();
 
-
 /* Paths */
 const srcPath = 'src/';
 const distPath = 'dist/';
@@ -50,12 +49,7 @@ const path = {
     clean: "./" + distPath
 }
 
-
-
 /* Tasks */
-
-
-
 function html(cb) {
     return src(path.src.html, {base: srcPath})
         .pipe(plumber())
@@ -174,6 +168,7 @@ function images(cb) {
 
     cb();
 }
+
 function imagesWatch(cb) {
     return src(path.src.images)
         .pipe(dest(path.build.images))
@@ -220,10 +215,9 @@ function serve() {
         }
     });
 }
+
 const build = gulp.series(clean, html, additionalcss, css, js, images, video, fonts);
 const watch = gulp.parallel(watchFiles, serve);
-
-
 
 /* Exports Tasks */
 exports.html = html;

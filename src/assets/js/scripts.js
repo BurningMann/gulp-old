@@ -1,13 +1,24 @@
+/* Проверка на моб девайс */
 if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
   document.querySelector('html').classList.add('mobile') 
 }
 
+/* Проверка на ios */
 if(navigator.platform.match('Mac') !== null) {
   document.body.setAttribute('class', 'OSX');
 }
 
+/* Проверка ширины экрана */
+function checkInnerWidth(width){
+  if(window.innerWidth <= width){
+    return true
+  }else{
+    return false
+  }
+}
+
 /* PRELOADER */
-$(document).ready(function(){
+/* $(document).ready(function(){
   $(window).resize(function(){
     let viewheight = $(window).height();
     $('.login').css('height',viewheight+'px')
@@ -42,28 +53,38 @@ $(document).ready(function(){
       bar.animate(percent);
     })
   }
-})
+}) */
 
 window.onload = function(){
-
-  setTimeout(() => {
+/*   setTimeout(() => {
     bar.animate(1);
     setTimeout(() => {
       $('.preloader').addClass('preloader--load')
     }, 750);
-  }, 1000);
-  
-  function checkInner(width){
-    if(window.innerWidth <= width){
-      return true
-    }else{
-      return false
-    }
-  }
+  }, 1000); */
 
   $(window).resize(function() {
 
   });
+
+  /* Lazy load */
+/*   var observer = lozad('[data-lazysrc]', {
+    threshold: 0.1,
+    enableAutoReload: true,
+    load: function(el) {
+      el.src = el.getAttribute("data-lazysrc");
+      // el.srcset = el.getAttribute("data-lazysrc");
+      el.onload = function() {
+        $(el).addClass("load")
+      }
+    }
+  })
+  observer.observe()
+  
+  var pictureObserver = lozad('.lozad', {
+    threshold: 0.1
+  })
+  pictureObserver.observe() */
 
   /* DEV SCRIPTS */
 
@@ -79,28 +100,4 @@ window.onload = function(){
       $(element).attr('href',link.replace(re,''))
     })
   }
-
-  if(!checkInner(1024)){
-    $("[data-back]").map(function(index,element){
-      let path = $(element).data('back')
-      $(element).attr('src', path)
-      $(element).addClass('load')
-      let video = $(element).closest('video')[0]
-      video.load();
-    })
-  }
-
-  var observer = lozad('[data-lazysrc]', {
-    threshold: 0.1,
-    enableAutoReload: true,
-    load: function(el) {
-      el.src = el.getAttribute("data-lazysrc");
-      /* el.srcset = el.getAttribute("data-lazysrc"); */
-      el.onload = function() {
-        $(el).addClass("load")
-      }
-    }
-  })
-  observer.observe()
-    
 }
