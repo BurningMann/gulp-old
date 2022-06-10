@@ -1,11 +1,31 @@
 /* Проверка на моб девайс */
-if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
-  document.querySelector('html').classList.add('mobile') 
+function iOS() {
+  return [
+      'iPad Simulator',
+      'iPhone Simulator',
+      'iPod Simulator',
+      'iPad',
+      'iPhone',
+      'iPod'
+  ].includes(navigator.platform)
+  // iPad on iOS 13 detection
+  || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+}
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent) || iOS();
+if (isMobile) {
+  document.querySelector('html').classList.add('is-mobile');
+}
+
+/* Проверка на safari */
+const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+if(isSafari) {
+  document.querySelector('html').classList.add('is-safari');
 }
 
 /* Проверка на ios */
-if(navigator.platform.match('Mac') !== null) {
-  document.body.setAttribute('class', 'OSX');
+const isIos = navigator.platform.match('Mac') !== null;
+if(isIos) {
+  document.querySelector('html').classList.add('is-OSX');
 }
 
 /* Проверка ширины экрана */
@@ -18,18 +38,12 @@ function checkInnerWidth(width){
 }
 
 /* PRELOADER */
-/* $(document).ready(function(){
-  $(window).resize(function(){
-    let viewheight = $(window).height();
-    $('.login').css('height',viewheight+'px')
-  })
-
-
+$(document).ready(function(){
   var images = document.images
   var total_count = images.length 
   var loaded_count = 0
 
-  bar = new ProgressBar.Circle(loader__progress, {
+  const ProgressBar = new ProgressBar.Circle(loader__progress, {
     strokeWidth: 1,
     easing: 'easeInOut',
     duration: 1400,
@@ -49,26 +63,24 @@ function checkInnerWidth(width){
   function image_loaded(){
     loaded_count++
     let percent = ((100/total_count*loaded_count<<0)/100) - 0.1
-    $(document).ready(function(){
-      bar.animate(percent);
-    })
+    ProgressBar.animate(percent);
   }
-}) */
+});
 
 window.onload = function(){
-/*   setTimeout(() => {
-    bar.animate(1);
+  setTimeout(() => {
+    ProgressBar.animate(1);
     setTimeout(() => {
       $('.preloader').addClass('preloader--load')
     }, 750);
-  }, 1000); */
+  }, 1000);
 
   $(window).resize(function() {
 
   });
 
   /* Lazy load */
-/*   var observer = lozad('[data-lazysrc]', {
+  var observer = lozad('[data-lazysrc]', {
     threshold: 0.1,
     enableAutoReload: true,
     load: function(el) {
@@ -84,7 +96,7 @@ window.onload = function(){
   var pictureObserver = lozad('.lozad', {
     threshold: 0.1
   })
-  pictureObserver.observe() */
+  pictureObserver.observe()
 
   /* DEV SCRIPTS */
 
